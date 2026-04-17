@@ -1,0 +1,38 @@
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "web-test-runner"
+  },
+  "dependencies": {
+    "lit": "^3.3.2"
+  },
+  "devDependencies": {
+    "@open-wc/testing": "^4.0.0",
+    "@web/test-runner": "^0.20.2",
+    "@web/test-runner-chrome": "^0.18.1",
+    "chai": "^6.2.2",
+    "vite": "^8.0.8"
+  },
+  "name": "grassly",
+  "version": "1.0.0",
+  "description": "Animated grass Web Component using Canvas and Lit",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "web-components",
+    "lit",
+    "canvas",
+    "animation",
+    "grass"
+  ],
+  "author": "Medeea Geanovu",
+  "license": "MIT",
+  "type": "module"
+}
