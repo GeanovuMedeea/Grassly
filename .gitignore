@@ -1,6 +1,5 @@
 .idea
 node_modules
 playground
-index.html
 vite.config.js
 web-test-runner.config.js
