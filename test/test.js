@@ -4,14 +4,14 @@ import '../src/components/GrassFloor.js';
 describe('GrassFloor', () => {
 
     it('renders a canvas element', async () => {
-        const el = await fixture(html`<grass-floor></grass-floor>`);
+        const el = await fixture(html`<grassly-component></grassly-component>`);
         const canvas = el.shadowRoot.querySelector('canvas');
 
         expect(canvas).to.exist;
     });
 
     it('initializes default properties', async () => {
-        const el = await fixture(html`<grass-floor></grass-floor>`);
+        const el = await fixture(html`<grassly-component></grassly-component>`);
 
         expect(el.density).to.equal(40);
         expect(el.wind).to.equal(1);
@@ -20,7 +20,7 @@ describe('GrassFloor', () => {
     });
 
     it('creates layers after first update', async () => {
-        const el = await fixture(html`<grass-floor></grass-floor>`);
+        const el = await fixture(html`<grassly-component></grassly-component>`);
 
         await el.updateComplete;
 
@@ -28,7 +28,7 @@ describe('GrassFloor', () => {
     });
 
     it('responds to mouse movement', async () => {
-        const el = await fixture(html`<grass-floor></grass-floor>`);
+        const el = await fixture(html`<grassly-component></grassly-component>`);
 
         const event = new MouseEvent('mousemove', {
             clientX: 50,
@@ -42,7 +42,7 @@ describe('GrassFloor', () => {
     });
 
     it('can be added to DOM like a real user would', async () => {
-        const el = document.createElement('grass-floor');
+        const el = document.createElement('grassly-component');
         document.body.appendChild(el);
 
         await el.updateComplete;
@@ -51,7 +51,7 @@ describe('GrassFloor', () => {
     });
 
     it('starts animation loop', async () => {
-        const el = await fixture(html`<grass-floor></grass-floor>`);
+        const el = await fixture(html`<grassly-component></grassly-component>`);
 
         await el.updateComplete;
 
@@ -60,7 +60,7 @@ describe('GrassFloor', () => {
 
     it('reads attributes correctly', async () => {
         const el = await fixture(html`
-        <grass-floor density="55" wind="0.3" tile="20"></grass-floor>
+        <grassly-component density="55" wind="0.3" tile="20"></grassly-component>
     `);
 
         expect(el.density).to.equal(55);
@@ -69,7 +69,7 @@ describe('GrassFloor', () => {
     });
 
     it('updates when properties change', async () => {
-        const el = await fixture(html`<grass-floor></grass-floor>`);
+        const el = await fixture(html`<grassly-component></grassly-component>`);
 
         await el.updateComplete;
 
@@ -86,7 +86,7 @@ describe('GrassFloor', () => {
 
     it('clamps invalid values', async () => {
         const el = await fixture(html`
-        <grass-floor density="-10" tile="0"></grass-floor>
+        <grassly-component density="-10" tile="0"></grassly-component>
     `);
 
         await el.updateComplete;
@@ -97,7 +97,7 @@ describe('GrassFloor', () => {
 
     it('updates theme correctly', async () => {
         const el = await fixture(html`
-        <grass-floor theme="neon"></grass-floor>
+        <grassly-component theme="neon"></grassly-component>
     `);
 
         await el.updateComplete;

@@ -65,7 +65,8 @@ function drawGrass(ctx, width, height, layers, mouse, wind, grassColor, time) {
 
             const bend = b.baseAngle + windEffect * GRASS.WIND_MULTIPLIER + mouseEffect;
 
-            const tipX = b.x + Math.sin(bend * GRASS.BEND_FACTOR) * b.height;            const tipY = baseY - b.height;
+            const tipX = b.x + Math.sin(bend * GRASS.BEND_FACTOR) * b.height;
+            const tipY = baseY - b.height;
 
             drawBlade(
                 ctx,

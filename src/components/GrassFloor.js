@@ -210,4 +210,4 @@ export class GrassFloor extends LitElement {
     }
 }
 
-customElements.define('grass-floor', GrassFloor);
+customElements.define('grassly-component', GrassFloor);
