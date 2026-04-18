@@ -12,12 +12,13 @@ export const GRASS = {
     INTERACTION_RADIUS: 140,
     MOUSE_FORCE: 22,
     WIND_MULTIPLIER: 10,
-    BEND_FACTOR: 0.05
+    BEND_FACTOR: 0.05,
+    BASE_HEIGHT: 10
 };
 
 export const BLADE = {
     BASE_THICKNESS: 1.8,
-    THICKNESS_VARIATION: 2.2
+    THICKNESS_VARIATION: 5
 };
 
 export const LAYERS = [

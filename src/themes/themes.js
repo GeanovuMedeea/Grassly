@@ -5,6 +5,21 @@ export function theme(theme) {
                 grass: '#d7a86e',
                 ground: '#4e342e'
             };
+        case 'spring':
+            return {
+                grass: '#85da28',
+                ground: '#543825'
+            };
+        case 'summer':
+            return {
+                grass: '#009134',
+                ground: '#5d130a'
+            };
+        case 'winter':
+            return {
+                grass: '#bdf0ff',
+                ground: '#b1d8e0'
+            };
         case 'neon':
             return {
                 grass: '#00ffcc',

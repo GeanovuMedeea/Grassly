@@ -26,7 +26,7 @@ function drawGround(ctx, width, height, groundColor) {
     const baseY = height - GROUND.HEIGHT;
     const { r: baseR, g: baseG, b: baseB } = hexToRgb(groundColor);
 
-    for (let y = 0; y < 40; y++) {
+    for (let y = 0; y < GROUND.HEIGHT; y++) {
         for (let x = 0; x < width; x++) {
 
             const n = noise(x, y);
@@ -45,29 +45,27 @@ function drawGround(ctx, width, height, groundColor) {
 /* ---------------- GRASS ---------------- */
 
 function drawGrass(ctx, width, height, layers, mouse, wind, grassColor, time) {
-    const baseY = height - 40;
+    const baseY = height - GROUND.HEIGHT;
     const radius = GRASS.INTERACTION_RADIUS;
     const mouseDy = height - mouse.y;
 
     for (const layer of layers) {
         for (const b of layer.blades) {
 
-            const dx = b.x - mouse.x;
+            const mouseDx = b.x - mouse.x;
 
-            const dist = Math.sqrt(dx * dx + mouseDy * mouseDy);
+            const dist = Math.sqrt(mouseDx * mouseDx + mouseDy * mouseDy);
 
             const windEffect = Math.sin(time * b.speed + b.phase) * wind;
 
             let mouseEffect = 0;
             if (dist < radius) {
-                mouseEffect = (1 - dist / radius) * GRASS.MOUSE_FORCE * (dx / radius);
+                mouseEffect = (1 - dist / radius) * GRASS.MOUSE_FORCE * (mouseDx / radius);
             }
 
             const bend = b.baseAngle + windEffect * GRASS.WIND_MULTIPLIER + mouseEffect;
 
             const tipX = b.x + Math.sin(bend * GRASS.BEND_FACTOR) * b.height;            const tipY = baseY - b.height;
-
-            ctx.globalAlpha = b.alpha;
 
             drawBlade(
                 ctx,
@@ -75,41 +73,36 @@ function drawGrass(ctx, width, height, layers, mouse, wind, grassColor, time) {
                 baseY,
                 tipX,
                 tipY,
-                BLADE.BASE_THICKNESS + b.thickness * BLADE.THICKNESS_VARIATION,
+                b.thickness,
                 shade(grassColor, b.shade)
             );
-
-            ctx.globalAlpha = 1;
         }
     }
 }
 
 /* ---------------- BLADE ---------------- */
 
-function drawBlade(ctx, x, baseY, tipX, tipY, thickness, color) {
-    const dx = tipX - x;
+function drawBlade(ctx, baseX, baseY, tipX, tipY, thickness, color) {
+    const dx = tipX - baseX;
     const dy = tipY - baseY;
-
     const len = Math.sqrt(dx * dx + dy * dy);
     const nx = -dy / len;
     const ny = dx / len;
 
-    const half = thickness * 0.5;
-
     ctx.beginPath();
-    ctx.moveTo(x - nx * half, baseY - ny * half);
-    ctx.lineTo(x + nx * half, baseY + ny * half);
+    ctx.moveTo(baseX - nx, baseY - ny);
+    ctx.lineTo(baseX + nx * thickness, baseY + ny * thickness);
     ctx.lineTo(tipX, tipY);
     ctx.closePath();
 
     ctx.fillStyle = color;
     ctx.fill();
 
-    const grad = ctx.createLinearGradient(x, baseY, tipX, tipY);
-    grad.addColorStop(0, "rgba(0,0,0,0.15)");
-    grad.addColorStop(0.5, color);
-    grad.addColorStop(1, "rgba(255,255,255,0.12)");
+    const gradient = ctx.createLinearGradient(baseX, baseY, tipX, tipY);
+    gradient.addColorStop(0, "rgba(0,0,0,0.15)");
+    gradient.addColorStop(0.5, color);
+    gradient.addColorStop(1, "rgba(255,255,255,0.15)");
 
-    ctx.fillStyle = grad;
+    ctx.fillStyle = gradient;
     ctx.fill();
 }
