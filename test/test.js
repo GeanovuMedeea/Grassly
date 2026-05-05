@@ -14,7 +14,7 @@ describe('GrassFloor', () => {
         const el = await fixture(html`<grassly-component></grassly-component>`);
 
         expect(el.density).to.equal(40);
-        expect(el.wind).to.equal(1);
+        expect(el.wind).to.equal(0.1);
         expect(el.theme).to.equal('forest');
         expect(el.tile).to.equal(40);
     });

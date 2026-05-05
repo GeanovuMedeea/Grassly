@@ -32,7 +32,20 @@ There are four customizable parameters:
 ````html
 <grassly-component density="number" wind="number" tile="number" theme="string"></grassly-component>
 ````
+These parameters can me modified directly from the component, or by invoking the method `setConfig` with `key-value` pairs representing the corresponding parameters.
+```javascript
+setConfig(config){
+    Object.assign(this, config);
+}
 
+grassly-component.setConfig({density:densityValue, wind:windValue, theme:themeValue, tile:tileValue});
+```
+
+The component's animation can paused and resumed through the following methods:
+```javascript
+grassly-component.pause();
+grassly-component.play();
+```
 ## Documentation
 
 The default parameters are:
@@ -56,6 +69,11 @@ The avaiable themes are:
 | desert |![img_5.png](images/img_5.png)|
 | lilac  |![img_8.png](images/img_8.png)|
 | neon   |![img_7.png](images/img_7.png)|
+
+An event is dispatched when the component is mounted:
+```javascript
+this.dispatchEvent(new CustomEvent('grass-ready'));
+```
 
 ## Demo
 ![img_1.png](images/img_1.png)

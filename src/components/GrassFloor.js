@@ -30,7 +30,7 @@ export class GrassFloor extends LitElement {
         super();
 
         this.density = 40;
-        this.wind = 1;
+        this.wind = 0.1;
         this.theme = 'forest';
         this.tile = 40;
 
@@ -43,6 +43,7 @@ export class GrassFloor extends LitElement {
         this.timeOffset = Math.random() * 1000;
 
         this._running = false;
+        this._ready = false;
         this._raf = null;
     }
 
@@ -67,6 +68,21 @@ export class GrassFloor extends LitElement {
         ) {
             this._initScene();
         }
+    }
+
+    /* ========================================================
+        PUBLIC
+    ======================================================== */
+    setConfig(config){
+        Object.assign(this, config);
+    }
+
+    pause() {
+        this._stop();
+    }
+
+    play() {
+        this._start();
     }
 
     /* =========================================================
@@ -142,12 +158,18 @@ export class GrassFloor extends LitElement {
             tile: this.tile
         });
 
+        if (!this._ready) {
+            this._ready = true;
+
+            this.dispatchEvent(new CustomEvent('grass-ready'));
+        }
         DEBUG && console.log('Scene initialized.')
     }
 
     _render() {
-        if (!this.ctx || !this.layers?.length || !this.width || !this.height) return;
-        if (!this.grassColor || !this.groundColor) return;
+        if (!this._ready) return;
+        // if (!this.ctx || !this.layers?.length || !this.width || !this.height) return;
+        // if (!this.grassColor || !this.groundColor) return;
 
         const time = performance.now() / 1000 + this.timeOffset;
 
@@ -182,14 +204,6 @@ export class GrassFloor extends LitElement {
         this._render();
         this._raf = requestAnimationFrame(this._loop);
     };
-
-    pause() {
-        this._stop();
-    }
-
-    play() {
-        this._start();
-    }
 
     /* =========================================================
        INPUT
