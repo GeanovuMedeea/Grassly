@@ -26,23 +26,44 @@
 <body>
 
 <h1>🌿 Grassly Component Demo</h1>
-
 <div class="section">
     <h2>Theme switcher demo</h2>
+    <div>
+        <select id="themeSelect">
+            <option value="forest">Forest</option>
+            <option value="autumn">Autumn</option>
+            <option value="winter">Winter</option>
+            <option value="spring">Spring</option>
+            <option value="summer">Summer</option>
+            <option value="desert">Desert</option>
+            <option value="neon">Neon</option>
+            <option value="lilac">Lilac</option>
+        </select>
 
-    <select id="themeSelect">
-        <option value="forest">Forest</option>
-        <option value="autumn">Autumn</option>
-        <option value="winter">Winter</option>
-        <option value="spring">Spring</option>
-        <option value="summer">Summer</option>
-        <option value="desert">Desert</option>
-        <option value="neon">Neon</option>
-        <option value="lilac">Lilac</option>
-    </select>
+        <button type="button" id="startButton" onClick="startAnimation()">Start</button>
+        <button type="button" id="stopButton" onClick="stopAnimation()">Stop</button>
+        <div style="margin-top:10px;">
+            <label>
+                Density:
+                <input type="number" id="densityInput" value="100" min="0" />
+            </label>
+
+            <label>
+                Wind:
+                <input type="number" id="windInput" value="0.1" step="0.1" />
+            </label>
+
+            <label>
+                Tile:
+                <input type="number" id="tileInput" value="100" min="1" />
+            </label>
+
+            <button type="button" onclick="applyConfig()">Apply Config</button>
+        </div>
+    </div>
 
     <div class="overlay-text large" style="width:500px;height:50px">
-        <grassly-component id="demoGrass" density="250" wind="0.1" theme="spring" tile="100"></grassly-component>
+        <grassly-component id="demoGrass" density="100" wind="0.1" theme="spring" tile="100"></grassly-component>
 
         <h2>🌿 UI component for Nature LOVERS!</h2>
         <p>
@@ -50,16 +71,42 @@
             Density, pattern repetition width, wind intensity and themes can be modified directly from the package version. Additional features can be modified in the source code if necessary.
         </p>
     </div>
+
 </div>
 
 <script type="module" src="./dist/index.js"></script>
 <script>
+
     const grass = document.getElementById('demoGrass');
     const select = document.getElementById('themeSelect');
+
+    grass.addEventListener('grass-ready',()=>{
+        console.log('Grassly is ready to launch!');
+    });
 
     select.addEventListener('change', (e) => {
         grass.theme = e.target.value;
     });
+
+    function startAnimation(){
+        grass.play();
+    }
+
+    function stopAnimation(){
+        grass.pause();
+    }
+
+    function applyConfig() {
+        const density = Number(document.getElementById('densityInput').value);
+        const wind = Number(document.getElementById('windInput').value);
+        const tile = Number(document.getElementById('tileInput').value);
+
+        grass.setConfig({
+            density,
+            wind,
+            tile
+        });
+    }
 </script>
 </body>
 </html>

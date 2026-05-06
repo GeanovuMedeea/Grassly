@@ -3,3 +3,5 @@ node_modules
 playground
 vite.config.js
 web-test-runner.config.js
+dist
+.npmrc
