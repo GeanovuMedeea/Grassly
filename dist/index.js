@@ -167,7 +167,6 @@ var g = class extends e {
             position: relative;
             height: 100%;
             width:100%;
-            overflow: hidden;
         }
 
         canvas {
@@ -196,16 +195,16 @@ var g = class extends e {
 		this._start();
 	}
 	connectedCallback() {
-		super.connectedCallback(), console.log("Connected Callback"), this._onMouseMove = this._onMouseMove.bind(this), this.addEventListener("pointermove", this._onMouseMove);
+		super.connectedCallback(), this._onMouseMove = this._onMouseMove.bind(this), this.addEventListener("pointermove", this._onMouseMove);
 	}
 	disconnectedCallback() {
-		super.disconnectedCallback(), window.removeEventListener("mousemove", this._onMouseMove), console.log("Disconnected Callback"), this._stop(), this._observer?.disconnect(), this._visibilityObserver?.disconnect();
+		super.disconnectedCallback(), window.removeEventListener("mousemove", this._onMouseMove), this._stop(), this._observer?.disconnect(), this._visibilityObserver?.disconnect();
 	}
 	firstUpdated() {
-		this.canvas = this.shadowRoot.querySelector("canvas"), this.ctx = this.canvas.getContext("2d"), this._observeResize(), this._observeVisibility(), (!this.width || !this.height) && this._resizeCanvas(300, 150), console.log("Updated for the first time!"), this._start();
+		this.canvas = this.shadowRoot.querySelector("canvas"), this.ctx = this.canvas.getContext("2d"), this._observeResize(), this._observeVisibility(), (!this.width || !this.height) && this._resizeCanvas(300, 150), this._start();
 	}
 	updated(e) {
-		(e.has("density") || e.has("wind") || e.has("tile") || e.has("theme")) && (console.log("Updated."), this._initScene());
+		(e.has("density") || e.has("wind") || e.has("tile") || e.has("theme")) && this._initScene();
 	}
 	_resizeCanvas(e, t) {
 		this.width = e, this.height = t, this.canvas.width = e, this.canvas.height = t;
@@ -213,12 +212,12 @@ var g = class extends e {
 	_observeResize() {
 		this._observer = new ResizeObserver(([e]) => {
 			let { width: t, height: n } = e.contentRect;
-			this._resizeCanvas(t, n), this._initScene(), console.log("Observe resize.");
+			this._resizeCanvas(t, n), this._initScene();
 		}), this._observer.observe(this);
 	}
 	_observeVisibility() {
 		this._visibilityObserver = new IntersectionObserver(([e]) => {
-			this._visible = e.isIntersecting, this._visible ? this.play() : (this.pause(), console.log("Paused due to being invisible."));
+			this._visible = e.isIntersecting, this._visible ? this.play() : this.pause();
 		}), this._visibilityObserver.observe(this);
 	}
 	_applyTheme() {

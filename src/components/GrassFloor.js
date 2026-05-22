@@ -3,7 +3,7 @@ import {theme} from "../themes/themes";
 import {buildLayers} from "../core/SceneBuilder";
 import {renderScene} from "../core/Renderer";
 
-const DEBUG = true;
+const DEBUG = false;
 export class GrassFloor extends LitElement {
     static properties = {
         density: { type: Number, reflect: true },
@@ -18,7 +18,6 @@ export class GrassFloor extends LitElement {
             position: relative;
             height: 100%;
             width:100%;
-            overflow: hidden;
         }
 
         canvas {
@@ -192,8 +191,6 @@ export class GrassFloor extends LitElement {
 
     _render() {
         if (!this._ready) return;
-        // if (!this.ctx || !this.layers?.length || !this.width || !this.height) return;
-        // if (!this.grassColor || !this.groundColor) return;
 
         const time = performance.now() / 1000 + this.timeOffset;
 

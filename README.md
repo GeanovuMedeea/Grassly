@@ -76,8 +76,7 @@ this.dispatchEvent(new CustomEvent('grass-ready'));
 ```
 
 ## Demo
-![img_1.png](images/img_1.png)
-
+![demofinal.png](images/demofinal.png)
 Available in the source code /dev folder is a simple playground to become familiar with the provided default options.
 
 ## Supported Languages
