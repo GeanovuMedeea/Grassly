@@ -46,6 +46,7 @@ As the component inherits the width and height of the host, it is required to sp
  .example-style {
     width: 500px;
     height: 200px;
+    // resize: both - supported dynamic resizing
 }
 
 <div class="example">
