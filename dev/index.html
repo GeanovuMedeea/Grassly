@@ -15,9 +15,12 @@
             margin-bottom: 40px;
         }
 
-        .large {
-            height: 320px;
-            margin-top:10px;
+        .box {
+            width: 500px;
+            height: 200px;
+            resize: both;
+            overflow: auto;
+            border: 2px solid #ccc;
         }
 
     </style>
@@ -55,21 +58,23 @@
 
             <label>
                 Tile:
-                <input type="number" id="tileInput" value="100" min="1" />
+                <input type="number" id="tileInput" value="200" min="1" />
             </label>
 
             <button type="button" onclick="applyConfig()">Apply Config</button>
         </div>
     </div>
 
-    <div class="overlay-text large" style="width:500px;height:50px">
-        <grassly-component id="demoGrass" density="100" wind="0.1" theme="spring" tile="100"></grassly-component>
-
+    <div style="margin-top:10px">
+        <div class="box">
+            <grassly-component id="demoGrass" density="100" wind="0.1" theme="spring" tile="200"></grassly-component>
+        </div>
         <h2>🌿 UI component for Nature LOVERS!</h2>
         <p>
             This component can be used and customized freely.
             Density, pattern repetition width, wind intensity and themes can be modified directly from the package version. Additional features can be modified in the source code if necessary.
         </p>
+        <p id="p01" style="padding:20px"></p>
     </div>
 
 </div>
@@ -100,12 +105,17 @@
         const density = Number(document.getElementById('densityInput').value);
         const wind = Number(document.getElementById('windInput').value);
         const tile = Number(document.getElementById('tileInput').value);
-
-        grass.setConfig({
-            density,
-            wind,
-            tile
-        });
+        const message = document.getElementById("p01");
+        message.innerHTML = "";
+        try {
+            grass.setConfig({
+                density,
+                wind,
+                tile
+            });
+        }catch (err){
+            message.innerHTML = "Received errors: " + err;
+        }
     }
 </script>
 </body>

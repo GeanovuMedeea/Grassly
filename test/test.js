@@ -30,15 +30,27 @@ describe('GrassFloor', () => {
     it('responds to mouse movement', async () => {
         const el = await fixture(html`<grassly-component></grassly-component>`);
 
+        el.getBoundingClientRect = () => ({
+            left: 0,
+            top: 0,
+            width: 100,
+            height: 100,
+            right: 100,
+            bottom: 100,
+            x: 0,
+            y: 0,
+            toJSON: () => {}
+        });
+
         const event = new MouseEvent('mousemove', {
             clientX: 50,
             clientY: 50
         });
 
-        window.dispatchEvent(event);
+        el.dispatchEvent(event);
 
-        expect(el.mouse.x).to.not.equal(-9999);
-        expect(el.mouse.y).to.not.equal(-9999);
+        expect(el.mouse.x).to.not.equal(50);
+        expect(el.mouse.y).to.not.equal(50);
     });
 
     it('can be added to DOM like a real user would', async () => {

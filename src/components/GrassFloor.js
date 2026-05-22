@@ -2,7 +2,8 @@ import { LitElement, html, css } from 'lit';
 import {theme} from "../themes/themes";
 import {buildLayers} from "../core/SceneBuilder";
 import {renderScene} from "../core/Renderer";
-const DEBUG = false;
+
+const DEBUG = true;
 export class GrassFloor extends LitElement {
     static properties = {
         density: { type: Number, reflect: true },
@@ -15,7 +16,8 @@ export class GrassFloor extends LitElement {
         :host {
             display: block;
             position: relative;
-            height: 140px;
+            height: 100%;
+            width:100%;
             overflow: hidden;
         }
 
@@ -42,12 +44,14 @@ export class GrassFloor extends LitElement {
         this.layers = [];
         this.timeOffset = Math.random() * 1000;
 
+        this._groundRerender = true;
         this._running = false;
+        this._visible = true;
         this._ready = false;
         this._raf = null;
     }
 
-    _validateProps() {
+     _validateProps() {
         this.density = Math.max(0, Number(this.density) || 0);
         this.wind = Number(this.wind) || 0;
         this.tile = Math.max(1, Number(this.tile) || 1);
@@ -57,23 +61,12 @@ export class GrassFloor extends LitElement {
         }
     }
 
-    willUpdate(changed) {
-        this._validateProps();
-
-        if (
-            changed.has('density') ||
-            changed.has('wind') ||
-            changed.has('tile') ||
-            changed.has('theme')
-        ) {
-            this._initScene();
-        }
-    }
-
     /* ========================================================
         PUBLIC
     ======================================================== */
     setConfig(config){
+        if(config.density - config.tile > 50)
+            throw "The difference between density and tile is too great."
         Object.assign(this, config);
     }
 
@@ -93,7 +86,7 @@ export class GrassFloor extends LitElement {
         super.connectedCallback();
         DEBUG && console.log('Connected Callback');
         this._onMouseMove = this._onMouseMove.bind(this);
-        window.addEventListener('mousemove', this._onMouseMove, { passive: true });
+        this.addEventListener('pointermove', this._onMouseMove);
     }
 
     disconnectedCallback() {
@@ -102,23 +95,37 @@ export class GrassFloor extends LitElement {
         DEBUG && console.log('Disconnected Callback');
         this._stop();
         this._observer?.disconnect();
+        this._visibilityObserver?.disconnect();
     }
 
     firstUpdated() {
         this.canvas = this.shadowRoot.querySelector('canvas');
         this.ctx = this.canvas.getContext('2d');
         this._observeResize();
-        if (!this.width) {
+        this._observeVisibility();
+        if (!this.width || !this.height) {
             this._resizeCanvas(300, 150);
         }
-        this._initScene();
         DEBUG && console.log('Updated for the first time!');
         this._start();
+    }
+
+    updated(changed) {
+        if (
+            changed.has('density') ||
+            changed.has('wind') ||
+            changed.has('tile') ||
+            changed.has('theme')
+        ) {
+            DEBUG && console.log("Updated.");
+            this._initScene();
+        }
     }
 
     /* =========================================================
        RESIZE
     ========================================================= */
+
     _resizeCanvas(width, height) {
         this.width = width;
         this.height = height;
@@ -129,13 +136,30 @@ export class GrassFloor extends LitElement {
 
     _observeResize() {
         this._observer = new ResizeObserver(([entry]) => {
-            const { width, height } = entry.contentRect;
-            this._resizeCanvas(width, height);
-            this._initScene();
+                const { width, height } = entry.contentRect;
+                this._resizeCanvas(width, height);
+                this._initScene();
+                DEBUG && console.log("Observe resize.")
         });
 
         this._observer.observe(this);
-        DEBUG && console.log('Got observe resized...');
+    }
+
+    _observeVisibility() {
+        this._visibilityObserver = new IntersectionObserver(([entry]) => {
+
+            this._visible = entry.isIntersecting;
+
+            if (this._visible) {
+                this.play();
+            } else {
+                this.pause();
+                DEBUG && console.log("Paused due to being invisible.")
+            }
+
+        });
+
+        this._visibilityObserver.observe(this);
     }
 
     /* =========================================================
@@ -146,11 +170,13 @@ export class GrassFloor extends LitElement {
         const { grass, ground } = theme(this.theme);
         this.grassColor = grass;
         this.groundColor = ground;
+        this._groundRerender = true;
     }
 
     _initScene() {
+        this._validateProps();
         this._applyTheme();
-        if (!this.width || !this.height) return;
+        this._groundRerender = true;
         this.layers = buildLayers({
             width: this.width,
             height: this.height,
@@ -160,10 +186,8 @@ export class GrassFloor extends LitElement {
 
         if (!this._ready) {
             this._ready = true;
-
             this.dispatchEvent(new CustomEvent('grass-ready'));
         }
-        DEBUG && console.log('Scene initialized.')
     }
 
     _render() {
@@ -196,8 +220,10 @@ export class GrassFloor extends LitElement {
     }
 
     _stop() {
-        cancelAnimationFrame(this._raf);
-        this._raf = null;
+        if (this._raf !== null) {
+            cancelAnimationFrame(this._raf);
+            this._raf = null;
+        }
     }
 
     _loop = () => {
