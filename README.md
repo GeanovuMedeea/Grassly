@@ -40,6 +40,23 @@ setConfig(config){
 
 grassly-component.setConfig({density:densityValue, wind:windValue, theme:themeValue, tile:tileValue});
 ```
+As the component inherits the width and height of the host, it is required to specify these in the host's `css style` or directly in the component's instantiation:
+
+```javascript
+ .example-style {
+    width: 500px;
+    height: 200px;
+}
+
+<div class="example">
+    <grassly-component></grassly-component>
+</div>
+
+```
+
+```javascript
+<grassly-component style="width:500px;height:200px"></grassly-component>
+```
 
 The component's animation can paused and resumed through the following methods:
 ```javascript
